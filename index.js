@@ -79,19 +79,25 @@ app.post('/api/users/:_id/exercises', (req, res) => {
       if (err)
         return res.send({ error: err });
 
-      return res.send({
+      const result = {
         username: user.username,
         description: description,
         duration: duration,
         date: date.toDateString(),
         _id: user._id
-      });
+      };
+
+      console.log("Result for POST exercise:");
+      console.log(result);
+
+      return res.send(result);
     });
   })
 });
 
 app.get('/api/users/:_id/logs', (req, res) => {
-  let { _id, from, to, limit } = req.params;
+  const { _id } = req.params;
+  let { from, to, limit } = req.query;
 
   console.log("Querying for " + _id);
   console.log(from);
