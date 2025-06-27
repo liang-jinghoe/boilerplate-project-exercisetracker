@@ -79,7 +79,7 @@ app.post('/api/users/:_id/exercises', (req, res) => {
       if (err)
         return res.send({ error: err });
 
-      const result = {
+      const res_result = {
         username: user.username,
         description: description,
         duration: duration,
@@ -88,9 +88,9 @@ app.post('/api/users/:_id/exercises', (req, res) => {
       };
 
       console.log("Result for POST exercise:");
-      console.log(result);
+      console.log(res_result);
 
-      return res.send(result);
+      return res.send(res_result);
     });
   })
 });
