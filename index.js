@@ -34,8 +34,8 @@ app.post('/api/users', (req, res) => {
   const user = new User({ username: username });
 
   user.save((err, user) => {
-    console.log("Created user:");
-    console.log(user);
+    if (err)
+      return res.send({ error: err });
 
     res.send({
       username: user.username,
@@ -46,8 +46,8 @@ app.post('/api/users', (req, res) => {
 
 app.get('/api/users', (req, res) => {
   User.find({}, (err, users) => {
-    console.log("All users: ");
-    console.log(users);
+    if (err)
+      return res.send({ error: err });
 
     res.send(users.map(user => {
       return {
@@ -65,8 +65,8 @@ app.post('/api/users/:_id/exercises', (req, res) => {
   date = date ? new Date(Number(date) ? Number(date) : date) : new Date();
 
   User.findById(_id, (err, user) => {
-    console.log("Found user for exercises:");
-    console.log(user);
+    if (err)
+      return res.send({ error: err });
 
     const exercise = new Exercise({
       user_id: _id,
@@ -77,13 +77,13 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 
     exercise.save((err, result) => {
       if (err)
-        return res.send({ error: "Failed to save" });
+        return res.send({ error: err });
 
       return res.send({
         username: user.username,
         description: description,
         duration: duration,
-        date: date,
+        date: date.toDateString(),
         _id: user._id
       });
     });
@@ -92,6 +92,11 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 
 app.get('/api/users/:_id/logs', (req, res) => {
   let { _id, from, to, limit } = req.params;
+
+  console.log("Querying for " + _id);
+  console.log(from);
+  console.log(to);
+  console.log(limit);
 
   User.findById(_id, (err, user) => {
     if (err)
@@ -114,6 +119,7 @@ app.get('/api/users/:_id/logs', (req, res) => {
     if (to)
       option.date['$lte'] = to;
 
+    console.log(option);
 
     let query = Exercise.find(option).select("description duration date");
 
