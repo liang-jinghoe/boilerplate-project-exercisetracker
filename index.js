@@ -82,7 +82,7 @@ app.post('/api/users/:_id/exercises', (req, res) => {
       const res_result = {
         username: user.username,
         description: description,
-        duration: duration,
+        duration: Number(duration),
         date: date.toDateString(),
         _id: user._id
       };
@@ -130,7 +130,7 @@ app.get('/api/users/:_id/logs', (req, res) => {
     let query = Exercise.find(option).select("description duration date");
 
     if (limit)
-      query.limit(limit);
+      query.limit(Number(limit));
 
     query.exec((err, exercises) => {
         if (err)
